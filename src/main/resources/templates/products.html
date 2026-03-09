@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="layout1"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<div class="p-3" layout:fragment="content">
+    <div class="p-3" sec:authorize="hasRole('ADMIN')">
+        <a class="btn btn-primary" th:href="@{/admin/newProduct}">New Product</a>
+    </div>
+    <table class="table">
+        <thead>
+        <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th>
+        </thead>
+        <tbody>
+        <tr th:each="p:${productList}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.price}"></td>
+            <td th:text="${p.quantity}"></td>
+            <!--To make it hidden for others and visible only for admin role-->
+            <td sec:authorize="hasRole('ADMIN')">
+                <!--To use @deletemapping instead of @getmapping or @postmapping for security purposes and the form automatically uses the csrf token againt cookies attacks-->
+                <form method="post" th:action="@{/admin/delete(id=${p.id})}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
